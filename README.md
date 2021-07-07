@@ -1,0 +1,1 @@
+Creating a new assignment for EOSC325 using Jupyter notebook. This assignment is based on the supplemental file for the book "Hydrogeological Properties of Earth Materials and Principles of Groundwater Flow", by the Grounddwater Project.
