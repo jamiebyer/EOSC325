@@ -32,7 +32,7 @@ def calc_h(h1, h2, K, W, L, x):
     return h
 
 def calc_h_max(h1, h2, K, W, L):
-    d = calc_divide(h1, h2, K, W, L)
+    d = calc_d(h1, h2, K, W, L)
     h = np.sqrt((h1**2)-(((h1**2-h2**2)*d)/L)+((W/K)*(L-d)*d))
     return h
 
@@ -47,27 +47,17 @@ import matplotlib.pyplot as plt
 import plotly.figure_factory as ff
 
 
-#elevation_plot.update_layout(annotations=get_arrows(h1, L, q, x))
-def get_arrows(h1, L, q, x):
-    arrow_count = 5
-    list_of_arrows = []
-    for y in np.linspace(0, h1, arrow_count):
-        for i in range(0, len(x), int(len(x)/arrow_count)):
-            arrow = go.layout.Annotation(dict(
-                        x=x[i]+q[i],
-                        y=y,
-                        xref="x", yref="y",
-                        text="",
-                        showarrow=True,
-                        axref = "x", ayref='y',
-                        ax= x[i],
-                        ay=y,
-                        arrowhead = 3,
-                        arrowwidth=1.5,
-                        arrowcolor='rgb(255,51,0)',)
-                    )
-            list_of_arrows.append(arrow)
-    return list_of_arrows
+def remove_mesh_points(X, Y, h1, h2, K, W, L):
+    h = calc_h(h1, h2, K, W, L, X[0])
+    
+    for i in range(len(X)):
+        for j in range(len(X[0])):
+            if Y[i][j] > h[j]:
+                X[i][j] = None
+                Y[i][j] = None
+                
+    return [X, Y]
+
 
 
 def update_graphs(h1, h2, K, W, L):
@@ -92,8 +82,9 @@ def update_graphs(h1, h2, K, W, L):
         
         #quiver plot
         x_quiver = np.linspace(L/8, L-(L/8), 8)
-        y_quiver = np.linspace(0, h1, 5) #go to max y value
+        y_quiver = np.linspace(0, (5/6)*calc_h_max(h1, h2, K, W, L), 5) #go to max y value
         X, Y = np.meshgrid(x_quiver, y_quiver)
+        X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
         u = calc_q(h1, h2, K, W, L, X)*20
         v = Y*0
         quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi/(9*16))
@@ -135,12 +126,14 @@ def initialize_graphs(h1, h2, K, W, L):
     
     #quiver plot
     x_quiver = np.linspace(L/8, L-(L/8), 8)
-    y_quiver = np.linspace(0, h1, 5) #go to max y value
+    y_quiver = np.linspace(0, (5/6)*calc_h_max(h1, h2, K, W, L), 5) #go to max y value
     X, Y = np.meshgrid(x_quiver, y_quiver)
+    X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
     u = calc_q(h1, h2, K, W, L, X)*20
     v = Y*0
     quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi/(9*16), name="qx")
     elevation_plot.add_traces(data=quiver_plot.data)
+    
     
     #q plot
     q_plot.add_trace(go.Scatter(x=x, y=q, line=dict(color='MediumPurple'), name="q"))
