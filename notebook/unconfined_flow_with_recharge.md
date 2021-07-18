@@ -17,44 +17,7 @@ kernelspec:
 
 +++
 
-This App is originally for EOSC 325 but should be useful in other courses as it will be accessible for public use. The idea is derived directly from the “supplemental file” (a spreadsheet) for the book “Hydrogeologic Properties of Earth Materials and Principles of Groundwater Flow”, by The Groundwater Project. 
-The reasons for building this as a stand-alone, interactive web-hosted dashboard is so that students can be given assignments that explore the concepts without having to refer to Box 6 (page 165-169) of this online textbook. 
-Initially, functionality will be very similar to the original spreadsheet, with the following differences: 
-1. ~~The app will run in a web browser, initially as a Jupyter Notebook, and later (possibly) as a standalone self-contained web app.~~
-2. The initial 5 adjustable input values are to be controlled with sliders, scrollbars or entry boxes. Constraints on values should be included to avoid “out of reasonable bounds” values. 
-3. Units will be clearly defined.
-4. Parameters will be defined with a 3D “cartoon” illustration to clarify the geometry. (Make this in a diagram-building tool like Powerpoint and save as an image to include in the app.) 
-5. Ranges of hydraulic conductivity (K) values will be provided for various material types using an adaptation of figure 32, pg 51 of the book linked above. 
-6. ~~Questions to guide exploration of the concepts will be included, initially based on those already posed in the existing spreadsheet. These questions with discussion points or solutions will be in a separate page or document so that instructors can vary the questions without modifying the app. ~~
-7. Possible enhancements for a future version: 
-* User defined surface topography
-* Selectable choice of units (needs discussion)
-* ~~Maybe put q_x on a separate graph, with “zero” line clearly marked~~
-* Arrows added within the acquifer illustrating flow direction (if this is possible).
-8. Other ideas can be considered as we explore the app’s use in teaching, learning and assignments.
-
-+++
-
-![hydraulic_conductivity.png](attachment:hydraulic_conductivity.png)
-
-+++
-
 ![diagram.png](attachment:diagram.png)
-
-+++
-
-- Thin black lines for distances
-- shade in brown
-- remove half top arrows
-- arrow labels are disconnected
-- x=0, x=L full sized labels
-- reserve blue for water
-
-+++
-
-* hydraulic head: The force exerted by a column of liquid expressed by the height of the liquid above the point at which the pressure is measured
-* hydraulic conductivity: a measure of a material's capacity to transmit water
-* groundwater divide forms where q' is zero
 
 ```{code-cell} ipython3
 #calculations
@@ -83,6 +46,8 @@ def calc_q(h1, h2, K, W, L, x):
 import matplotlib.pyplot as plt
 import plotly.figure_factory as ff
 
+
+#elevation_plot.update_layout(annotations=get_arrows(h1, L, q, x))
 def get_arrows(h1, L, q, x):
     arrow_count = 5
     list_of_arrows = []
@@ -106,7 +71,7 @@ def get_arrows(h1, L, q, x):
 
 
 def update_graphs(h1, h2, K, W, L):
-    x = np.linspace(0, L, 1000) #should go to the max L value
+    x = np.linspace(0, L, 1000)
     h = calc_h(h1, h2, K, W, L, x)
     q = calc_q(h1, h2, K, W, L, x)
     d = calc_d(h1, h2, K, W, L)
@@ -123,7 +88,7 @@ def update_graphs(h1, h2, K, W, L):
         
         elevation_plot.update_xaxes(range=[0, L])
         
-        #elevation_plot.update_layout(annotations=get_arrows(h1, L, q, x))
+        
         
         #quiver plot
         x_quiver = np.linspace(L/8, L-(L/8), 8)
@@ -132,14 +97,10 @@ def update_graphs(h1, h2, K, W, L):
         u = calc_q(h1, h2, K, W, L, X)*20
         v = Y*0
         quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi/(9*16))
-        #print(elevation_plot.data[2])
-        #elevation_plot.data[2] = quiver_plot.data
         
         elevation_plot.data[2].x = quiver_plot.data[0].x
         elevation_plot.data[2].y = quiver_plot.data[0].y
-        #elevation_plot.add_traces(data = quiver_plot.data)
         
-
         
     with q_plot.batch_update():
         #q plot
@@ -160,7 +121,6 @@ def initialize_graphs(h1, h2, K, W, L):
     d = calc_d(h1, h2, K, W, L)
     
     #elevation plot
-    #elevation_plot.data = []
     elevation_plot.add_trace(go.Scatter(x=x, y=h, line=dict(color='MediumTurquoise'), name="h"))
     
     index = min(range(len(x)), key=lambda i: abs(x[i]-d))
@@ -183,7 +143,6 @@ def initialize_graphs(h1, h2, K, W, L):
     elevation_plot.add_traces(data=quiver_plot.data)
     
     #q plot
-    #q_plot.data = []
     q_plot.add_trace(go.Scatter(x=x, y=q, line=dict(color='MediumPurple'), name="q"))
     
     q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="0"))
@@ -192,11 +151,6 @@ def initialize_graphs(h1, h2, K, W, L):
     q_plot.update_xaxes(range=[0, L])
     q_plot.layout.title = "q Plot"
     q_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))
-    
-    
-    
-    
-
     
 ```
 
