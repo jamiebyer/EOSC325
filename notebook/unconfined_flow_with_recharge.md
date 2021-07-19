@@ -124,7 +124,7 @@ def initialize_graphs(h1, h2, K, W, L):
     
     #elevation_plot.update_layout(annotations=get_arrows(h1, L, q, x))
     
-    #quiver plot
+    #quiver plot 
     x_quiver = np.linspace(L/8, L-(L/8), 8)
     y_quiver = np.linspace(0, (5/6)*calc_h_max(h1, h2, K, W, L), 5) #go to max y value
     X, Y = np.meshgrid(x_quiver, y_quiver)
