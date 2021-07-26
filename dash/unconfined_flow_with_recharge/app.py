@@ -74,8 +74,8 @@ app.layout = html.Div([
     html.Div([
             dcc.Markdown(''' **_W_ (m/day):** '''),
             dcc.Slider(
-                id='W', min=0.01, max=1, step=0.001, value=initial_W,
-                marks={0.01:'0.01', 1:'1'},
+                id='W', min=-0.25, max=1, step=0.001, value=initial_W,
+                marks={-0.25:'-0.25', 1:'1'},
                 tooltip={'always_visible':True, 'placement':'topLeft'}
             ),
         ], style={'width': '48%', 'display': 'inline-block'}),

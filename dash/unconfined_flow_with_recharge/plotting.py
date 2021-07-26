@@ -7,11 +7,18 @@ import calculations as calc
 def remove_mesh_points(X, Y, h1, h2, K, W, L):
     h = calc.get_h(h1, h2, K, W, L, X[0])
 
-    for i in range(len(X)):
-        for j in range(len(X[0])):
-            if Y[i][j] > h[j]:
-                X[i][j] = None
-                Y[i][j] = None
+    if calc.get_h_max(h1, h2, K, W, L) >= 0:
+        for i in range(len(X)):
+            for j in range(len(X[0])):
+                if Y[i][j] > h[j]:
+                    X[i][j] = None
+                    Y[i][j] = None
+    else:
+        for i in range(len(X)):
+            for j in range(len(X[0])):
+                if Y[i][j] > h[j]:
+                    X[i][j] = None
+                    Y[i][j] = None
 
     return [X, Y]
 
@@ -39,7 +46,7 @@ def initialize_elevation_plot(h1, h2, K, W, L):
 
     # quiver plot
     x_quiver = np.linspace(L / 8, L - (L / 8), 8)
-    y_quiver = np.linspace(0, (5 / 6) * calc.get_h_max(h1, h2, K, W, L), 5)  # go to max y value
+    y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
     X, Y = np.meshgrid(x_quiver, y_quiver)
     X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
     u = calc.get_q(h1, h2, K, W, L, X) * 20
@@ -89,7 +96,7 @@ def update_elevation_plot(h1, h2, K, W, L, elevation_plot):
 
     # quiver plot
     x_quiver = np.linspace(L / 8, L - (L / 8), 8)
-    y_quiver = np.linspace(0, (5 / 6) * calc.get_h_max(h1, h2, K, W, L), 5)  # go to max y value
+    y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
     X, Y = np.meshgrid(x_quiver, y_quiver)
     X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
     u = calc.get_q(h1, h2, K, W, L, X) * 20
