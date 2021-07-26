@@ -22,6 +22,14 @@ def remove_mesh_points(X, Y, h1, h2, K, W, L):
 
     return [X, Y]
 
+def get_topography_line(x, h):
+    shift = [5, 5.5, 5.8, 6.0, 5.8, 5.5, 6.3, 6.8, 7.0, 7.4, 7.8, 8.2, 8, 7.5, 6.8, 5, 4]*3
+    x_top = np.linspace(0, len(x), 17)
+    y_top = max(h) + shift
+
+    topography_line = go.Scatter(x=x_top, y=y_top, mode='lines', line=dict(color='Sienna'), name="topography")
+    return topography_line
+
 def initialize_elevation_plot(h1, h2, K, W, L):
     elevation_plot = go.Figure()
     # Initializing traces with plot.add_trace
@@ -53,6 +61,9 @@ def initialize_elevation_plot(h1, h2, K, W, L):
     v = Y * 0
     quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="qx")
     elevation_plot.add_traces(data=quiver_plot.data)
+
+    #topography line
+    elevation_plot.add_trace(get_topography_line(x, h))
 
     return elevation_plot
 
@@ -105,6 +116,11 @@ def update_elevation_plot(h1, h2, K, W, L, elevation_plot):
 
     elevation_plot.data[2].x = quiver_plot.data[0].x
     elevation_plot.data[2].y = quiver_plot.data[0].y
+
+    # topography line
+    topography_plot = get_topography_line(x, h)
+    elevation_plot.data[3].x = topography_plot.x
+    elevation_plot.data[3].y = topography_plot.y
 
     return elevation_plot
 
