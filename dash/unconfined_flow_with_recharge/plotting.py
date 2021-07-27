@@ -45,7 +45,7 @@ def initialize_elevation_plot(h1, h2, K, W, L):
     elevation_plot.add_trace(
         go.Scatter(x=[d, d], y=[0, h[index]], mode='lines', line=dict(color='FireBrick'), name="d"))
 
-    elevation_plot.update_layout(xaxis_title='x', yaxis_title="Water Table Elevation (m)")
+    elevation_plot.update_layout(xaxis_title='x (m)', yaxis_title="Water Table Elevation (m)")
     elevation_plot.update_xaxes(range=[0, L])
     elevation_plot.layout.title = "Elevation Plot"
     elevation_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))
@@ -81,7 +81,7 @@ def initialize_q_plot(h1, h2, K, W, L):
 
     q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="0"))
 
-    q_plot.update_layout(xaxis_title='x', yaxis_title="qx (m^2/day)")
+    q_plot.update_layout(xaxis_title='x (m)', yaxis_title="qx (m^2/day)")
     q_plot.update_xaxes(range=[0, L])
     q_plot.layout.title = "q Plot"
     q_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))

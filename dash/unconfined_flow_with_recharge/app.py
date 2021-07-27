@@ -32,7 +32,7 @@ app = dash.Dash(
 initial_h1 = 20
 initial_h2 = 10
 initial_K = 50
-initial_W = 0.1
+initial_W = 0.05
 initial_L = 1000
 
 
@@ -40,10 +40,12 @@ app.layout = html.Div([
 
     html.Div([
         dcc.Markdown('''
-            ### EOSC 325
-
-            #### Unconfined Flow with Recharge
-
+            ### EOSC 325: Unconfined Flow with Recharge
+            ##### Approximate values of K (in m/day):
+            - **Silt, Loess**: 10\u207B\u2074 to 1
+            - **Silty Sand**: 10\u207B\u00B2 to 10\u00B2
+            - **Clean Sand**: 10\u207B\u00B9 to 10\u00B3
+            - **Gravel**: 10\u00B2 to 10\u2075
             ----------
             '''),
     ], style={'width': '100%', 'display': 'inline-block', 'padding': '0 20', 'vertical-align': 'middle', 'margin-bottom': 30, 'margin-right': 50, 'margin-left': 20}),
@@ -66,16 +68,16 @@ app.layout = html.Div([
     html.Div([
             dcc.Markdown(''' **_K_ (m/day):** '''),
             dcc.Slider(
-                id='K', min=1, max=100, step=1, value=initial_K,
-                marks={1:'1', 100:'100'},
+                id='K', min=0.01, max=100, step=0.01, value=initial_K,
+                marks={0.01:'0.01', 100:'100'},
                 tooltip={'always_visible':True, 'placement':'topLeft'}
             ),
         ], style={'width': '48%', 'display': 'inline-block'}),
     html.Div([
             dcc.Markdown(''' **_W_ (m/day):** '''),
             dcc.Slider(
-                id='W', min=-0.25, max=1, step=0.001, value=initial_W,
-                marks={-0.25:'-0.25', 1:'1'},
+                id='W', min=-0.05, max=0.05, step=0.001, value=initial_W,
+                marks={-0.05:'-0.05', 0.05:'0.05'},
                 tooltip={'always_visible':True, 'placement':'topLeft'}
             ),
         ], style={'width': '48%', 'display': 'inline-block'}),
