@@ -34,6 +34,8 @@ initial_h2 = 10
 initial_K = 50
 initial_W = 0.05
 initial_L = 1000
+initial_material = 'silty_sand'
+initial_arrow_visibility = ['visible']
 
 
 app.layout = html.Div([
@@ -41,55 +43,69 @@ app.layout = html.Div([
     html.Div([
         dcc.Markdown('''
             ### EOSC 325: Unconfined Flow with Recharge
-            ##### Approximate values of K (in m/day):
-            - **Silt, Loess**: 10\u207B\u2074 to 1
-            - **Silty Sand**: 10\u207B\u00B2 to 10\u00B2
-            - **Clean Sand**: 10\u207B\u00B9 to 10\u00B3
-            - **Gravel**: 10\u00B2 to 10\u2075
+            
             ----------
             '''),
     ], style={'width': '100%', 'display': 'inline-block', 'padding': '0 20', 'vertical-align': 'middle', 'margin-bottom': 30, 'margin-right': 50, 'margin-left': 20}),
-    html.Div([
-            dcc.Markdown(''' **_h1_ (m):** '''),
-            dcc.Slider(
-                id='h1', min=1, max=50, step=0.5, value=initial_h1,
-                marks={1:'1', 50:'50'},
-                tooltip={'always_visible':True, 'placement':'topLeft'}
-            ),
-        ], style={'width': '48%', 'display': 'inline-block'}),
-    html.Div([
-            dcc.Markdown(''' **_h2_ (m):** '''),
-            dcc.Slider(
-                id='h2', min=1, max=50, step=0.5, value=initial_h2,
-                marks={1:'1', 50:'50'},
-                tooltip={'always_visible':True, 'placement':'topLeft'}
-            ),
-        ], style={'width': '48%', 'display': 'inline-block'}),
-    html.Div([
-            dcc.Markdown(''' **_K_ (m/day):** '''),
-            dcc.Slider(
-                id='K', min=0.01, max=100, step=0.01, value=initial_K,
-                marks={0.01:'0.01', 100:'100'},
-                tooltip={'always_visible':True, 'placement':'topLeft'}
-            ),
-        ], style={'width': '48%', 'display': 'inline-block'}),
-    html.Div([
-            dcc.Markdown(''' **_W_ (m/day):** '''),
-            dcc.Slider(
-                id='W', min=-0.05, max=0.05, step=0.001, value=initial_W,
-                marks={-0.05:'-0.05', 0.05:'0.05'},
-                tooltip={'always_visible':True, 'placement':'topLeft'}
-            ),
-        ], style={'width': '48%', 'display': 'inline-block'}),
-    html.Div([
-            dcc.Markdown(''' **_L_ (m):** '''),
-            dcc.Slider(
-                id='L', min=100, max=1000, step=5, value=initial_L,
-                marks={100:'100', 1000:'1000'},
-                tooltip={'always_visible':True, 'placement':'topLeft'}
-            ),
-        ], style={'width': '48%', 'display': 'inline-block'}),
 
+    html.Div([
+        dcc.Markdown(''' **_h1_ (m):** '''),
+        dcc.Slider(
+            id='h1', min=1, max=50, step=0.5, value=initial_h1,
+            marks={1:'1', 50:'50'},
+            tooltip={'always_visible':True, 'placement':'topLeft'}
+        ),
+        dcc.Markdown(''' **_K_ (m/day):** '''),
+        dcc.Slider(
+            id='K', min=10**(-2), max=10**(2), step=0.01, value=initial_K,
+            marks={10**(-2):'10\u207B\u00B2', 10**(2):'10\u00B2'},
+            tooltip={'always_visible':True, 'placement':'topLeft'}
+        ),
+        dcc.Markdown(''' **_L_ (m):** '''),
+        dcc.Slider(
+            id='L', min=100, max=1000, step=5, value=initial_L,
+            marks={100:'100', 1000:'1000'},
+            tooltip={'always_visible':True, 'placement':'topLeft'}
+        ),
+    ], style={'width': '40%', 'display': 'inline-block', 'vertical-align': 'top'}),
+
+    html.Div([
+        dcc.Markdown(''' **_h2_ (m):** '''),
+        dcc.Slider(
+            id='h2', min=1, max=50, step=0.5, value=initial_h2,
+            marks={1:'1', 50:'50'},
+            tooltip={'always_visible':True, 'placement':'topLeft'}
+        ),
+        dcc.Markdown(''' **_W_ (m/day):** '''),
+        dcc.Slider(
+            id='W', min=-0.05, max=0.05, step=0.001, value=initial_W,
+            marks={-0.05:'-0.05', 0.05:'0.05'},
+            tooltip={'always_visible':True, 'placement':'topLeft'}
+        ),
+    ], style={'width': '40%', 'display': 'inline-block', 'vertical-align': 'top'}),
+
+    html.Div([
+        dcc.Markdown(''' **Material:** '''),
+        dcc.RadioItems(
+            id='material',
+            options=[
+                {'label': 'Silt, Loess', 'value': 'silt'},
+                {'label': 'Silty Sand', 'value': 'silty_sand'},
+                {'label': 'Clean Sand', 'value': 'clean_sand'},
+                {'label': 'Gravel', 'value': 'gravel'},
+            ],
+            value=initial_material,
+            style={'margin-bottom': '20px'}
+        ),
+        dcc.Markdown(''' **Flow Arrows:** '''),
+        dcc.Checklist(
+            id='arrow_visibility',
+            options=[
+                {'label': 'arrows visible', 'value': 'visible'},
+            ],
+            value=initial_arrow_visibility
+        )
+    ], style={'width': '20%', 'display': 'inline-block', 'vertical-align': 'top'}),
 
     html.Div([
         dcc.Graph(
@@ -118,15 +134,29 @@ app.layout = html.Div([
         )
     ], style={'width': '100%', 'display': 'inline-block'}),
 
-
 ], style={'width': '1000px'})
 
 
 
 #initialize plots
-elevation_plot = plot.initialize_elevation_plot(initial_h1, initial_h2, initial_K, initial_W, initial_L)
+elevation_plot = plot.initialize_elevation_plot(initial_h1, initial_h2, initial_K, initial_W, initial_L, initial_arrow_visibility)
 q_plot = plot.initialize_q_plot(initial_h1, initial_h2, initial_K, initial_W, initial_L)
 
+@app.callback(
+    Output(component_id='K', component_property='min'),
+    Output(component_id='K', component_property='max'),
+    Output(component_id='K', component_property='marks'),
+    Input(component_id='material', component_property='value'),
+)
+def update_K_bounds(material):
+    if material == 'silt':
+        return 10**(-4), 1, {10**(-4):'10\u207B\u2074', 1:'1'}
+    elif material == 'silty_sand':
+        return 10**(-2), 10**(2), {10**(-2):'10\u207B\u00B2', 10**(2):'10\u00B2'}
+    elif material == 'clean_sand':
+        return 10**(-1), 10**(3), {10**(-1):'10\u207B\u00B9', 10**(3):'10\u00B3'}
+    elif material == 'gravel':
+        return 10**(2), 10**(5), {10**(2):'10\u00B2', 10**(5):'10\u2075'}
 
 @app.callback(
     Output(component_id='elevation_plot', component_property='figure'),
@@ -134,10 +164,11 @@ q_plot = plot.initialize_q_plot(initial_h1, initial_h2, initial_K, initial_W, in
     Input(component_id='h2', component_property='value'),
     Input(component_id='K', component_property='value'),
     Input(component_id='W', component_property='value'),
-    Input(component_id='L', component_property='value')
+    Input(component_id='L', component_property='value'),
+    Input(component_id='arrow_visibility', component_property='value')
 )
-def update_elevation_plot(h1, h2, K, W, L):
-    fig = plot.update_elevation_plot(h1, h2, K, W, L, elevation_plot)
+def update_elevation_plot(h1, h2, K, W, L, arrow_visibility):
+    fig = plot.update_elevation_plot(h1, h2, K, W, L, arrow_visibility, elevation_plot)
     return fig
 
 

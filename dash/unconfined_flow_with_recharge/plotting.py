@@ -30,7 +30,7 @@ def get_topography_line(x, h):
     topography_line = go.Scatter(x=x_top, y=y_top, mode='lines', line=dict(color='Sienna'), name="topography")
     return topography_line
 
-def initialize_elevation_plot(h1, h2, K, W, L):
+def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     elevation_plot = go.Figure()
     # Initializing traces with plot.add_trace
     x = np.linspace(0, L, 1000)  # should go to the max L value
@@ -52,18 +52,21 @@ def initialize_elevation_plot(h1, h2, K, W, L):
 
     # elevation_plot.update_layout(annotations=get_arrows(h1, L, q, x))
 
-    # quiver plot
-    x_quiver = np.linspace(L / 8, L - (L / 8), 8)
-    y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
-    X, Y = np.meshgrid(x_quiver, y_quiver)
-    X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
-    u = calc.get_q(h1, h2, K, W, L, X) * 20
-    v = Y * 0
-    quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="qx")
-    elevation_plot.add_traces(data=quiver_plot.data)
+    if 'visible' in arrow_visibility:
+        # quiver plot
+        x_quiver = np.linspace(L / 8, L - (L / 8), 8)
+        y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
+        X, Y = np.meshgrid(x_quiver, y_quiver)
+        X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
+        u = calc.get_q(h1, h2, K, W, L, X) * 20
+        v = Y * 0
+        quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="qx")
+        elevation_plot.add_traces(data=quiver_plot.data)
 
     #topography line
     elevation_plot.add_trace(get_topography_line(x, h))
+
+    elevation_plot.add_hrect(y0=-4, y1=0, line_width=0, fillcolor="grey", opacity=1)
 
     return elevation_plot
 
@@ -89,7 +92,7 @@ def initialize_q_plot(h1, h2, K, W, L):
     return q_plot
 
 
-def update_elevation_plot(h1, h2, K, W, L, elevation_plot):
+def update_elevation_plot(h1, h2, K, W, L, arrow_visibility, elevation_plot):
     x = np.linspace(0, L, 1000)
     h = calc.get_h(h1, h2, K, W, L, x)
     d = calc.get_d(h1, h2, K, W, L)
@@ -105,17 +108,22 @@ def update_elevation_plot(h1, h2, K, W, L, elevation_plot):
 
     elevation_plot.update_xaxes(range=[0, L])
 
-    # quiver plot
-    x_quiver = np.linspace(L / 8, L - (L / 8), 8)
-    y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
-    X, Y = np.meshgrid(x_quiver, y_quiver)
-    X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
-    u = calc.get_q(h1, h2, K, W, L, X) * 20
-    v = Y * 0
-    quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16))
+    if 'visible' in arrow_visibility:
+        # quiver plot
+        x_quiver = np.linspace(L / 8, L - (L / 8), 8)
+        y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
+        X, Y = np.meshgrid(x_quiver, y_quiver)
+        X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
+        u = calc.get_q(h1, h2, K, W, L, X) * 20
+        v = Y * 0
+        quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16))
 
-    elevation_plot.data[2].x = quiver_plot.data[0].x
-    elevation_plot.data[2].y = quiver_plot.data[0].y
+        elevation_plot.data[2].x = quiver_plot.data[0].x
+        elevation_plot.data[2].y = quiver_plot.data[0].y
+    else:
+        elevation_plot.data[2].x = []
+        elevation_plot.data[2].y = []
+
 
     # topography line
     topography_plot = get_topography_line(x, h)
