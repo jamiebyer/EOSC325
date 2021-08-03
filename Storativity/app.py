@@ -131,8 +131,10 @@ app.layout = html.Div([
     Input(component_id='density', component_property='value'),
     Input(component_id='thickness', component_property='value'),
 )
-def update_plot(alpha, porosity, density, thickness):
+def update_plot(inp_alpha, inp_porosity, inp_density, inp_thickness):
     materials = ['Clay', 'Sand', 'Gravel', 'Jointed Rock', 'Sound Rock']
+
+    alpha, porosity, density, thickness = calc.alpha(inp_alpha), calc.porosity(inp_porosity), calc.density(inp_density), inp_thickness
 
     fig = go.Figure([go.Bar(x=materials, y=calc.storativity(alpha, porosity, density, thickness))])
     return fig
