@@ -1,6 +1,6 @@
 # EOSC 325 Demos
 
-Creating a demos for EOSC325 using Python Dash. 
+Creating demos for EOSC325 using Python Dash. 
 
 ## Unconfined Flow with Recharge
 This demo is based on the supplemental file for the book "Hydrogeological Properties of Earth Materials and Principles of Groundwater Flow", by the Groundwater Project.
