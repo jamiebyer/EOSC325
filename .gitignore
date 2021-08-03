@@ -1,7 +1,9 @@
 .ipynb_checkpoints
 *.ipynb
-diagram.png
-diagram.pptx
-hydraulic_conductivity.png
-UnconfinedFlow-WithRecharge.docx
-UnconfinedFlowWithRecharge.xlsx
+UnconfinedFlow/diagram.png
+UnconfinedFlow/diagram.pptx
+UnconfinedFlow/hydraulic_conductivity.png
+UnconfinedFlow/UnconfinedFlow-WithRecharge.docx
+UnconfinedFlow/UnconfinedFlowWithRecharge.xlsx
+UnconfinedFlow/notebook
+HydrogeologyTextbook.pdf
