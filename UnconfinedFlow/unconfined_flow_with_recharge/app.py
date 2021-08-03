@@ -29,11 +29,11 @@ app = dash.Dash(
 )
 
 #initial parameter values
-initial_h1 = 20
-initial_h2 = 10
+initial_h1 = 35
+initial_h2 = 30
 initial_K = 50
 initial_W = 0.05
-initial_L = 1000
+initial_L = 800
 initial_material = 'silty_sand'
 initial_arrow_visibility = ['visible']
 
@@ -63,8 +63,8 @@ app.layout = html.Div([
         ),
         dcc.Markdown(''' **_L_ (m):** '''),
         dcc.Slider(
-            id='L', min=100, max=1000, step=5, value=initial_L,
-            marks={100:'100', 1000:'1000'},
+            id='L', min=100, max=800, step=5, value=initial_L,
+            marks={100:'100', 800:'800'},
             tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
     ], style={'width': '40%', 'display': 'inline-block', 'vertical-align': 'top'}),

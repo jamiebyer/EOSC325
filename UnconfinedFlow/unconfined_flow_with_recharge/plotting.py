@@ -23,9 +23,9 @@ def remove_mesh_points(X, Y, h1, h2, K, W, L):
     return [X, Y]
 
 def get_topography_line(x, h):
-    shift = [5, 5.5, 5.8, 6.0, 5.8, 5.5, 6.3, 6.8, 7.0, 7.4, 7.8, 8.2, 8, 7.5, 6.8, 5, 4]*3
-    x_top = np.linspace(0, len(x), 17)
-    y_top = max(h) + shift
+    shift = np.array([5, 5.5, 5.8, 6.0, 5.8, 5.5, 6.3, 6.8, 7.0, 7.4, 7.8, 8.2, 8, 7.5, 6.8, 5, 4])*3
+    x_top = np.linspace(0, 800, 17)
+    y_top = 30 + shift
 
     topography_line = go.Scatter(x=x_top, y=y_top, mode='lines', line=dict(color='Sienna'), name="topography")
     return topography_line
