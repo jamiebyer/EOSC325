@@ -43,8 +43,8 @@ app.layout = html.Div([
         dcc.Graph(
             id='plot',
             config={
-                'staticPlot': True,  # True, False
-                # 'scrollZoom': True,  # True, False
+                'staticPlot': False,  # True, False
+                'scrollZoom': False,  # True, False
                 'doubleClick': 'reset',  # 'reset', 'autosize' or 'reset+autosize', False
                 'showTips': True,  # True, False
                 'displayModeBar': False,  # True, False, 'hover'
@@ -52,9 +52,27 @@ app.layout = html.Div([
                 'modeBarButtonsToRemove': ['pan2d', 'select2d', 'lasso2d'],
             },
         ),
+
+        dcc.Markdown(
+            id='Sa_text'
+        ),
     ], style={'width': '70%', 'display': 'inline-block', 'vertical-align': 'middle'}),
 
     html.Div([
+        dcc.Markdown('''
+                    **Plot:**
+                '''),
+        dcc.RadioItems(
+            id='y_plotting',
+            options=[
+                {'label': 'storativity', 'value': 'S'},
+                {'label': 'specific storage', 'value': 'Ss'},
+                {'label': 'Sw', 'value': 'Sw'}
+            ],
+            value='S',
+            style={'margin-bottom': '30px'}
+        ),
+
         dcc.Markdown('''
             **Alpha:**
         '''),
@@ -126,18 +144,31 @@ app.layout = html.Div([
 
 @app.callback(
     Output(component_id='plot', component_property='figure'),
+    Output(component_id='Sa_text', component_property='children'),
+    Input(component_id='y_plotting', component_property='value'),
     Input(component_id='alpha', component_property='value'),
     Input(component_id='porosity', component_property='value'),
     Input(component_id='density', component_property='value'),
     Input(component_id='thickness', component_property='value'),
 )
-def update_plot(inp_alpha, inp_porosity, inp_density, inp_thickness):
+def update_plot(y_plotting, inp_alpha, inp_porosity, inp_density, inp_thickness):
     materials = ['Clay', 'Sand', 'Gravel', 'Jointed Rock', 'Sound Rock']
 
     alpha, porosity, density, thickness = calc.alpha(inp_alpha), calc.porosity(inp_porosity), calc.density(inp_density), inp_thickness
 
-    fig = go.Figure([go.Bar(x=materials, y=calc.storativity(alpha, porosity, density, thickness))])
-    return fig
+    if y_plotting == 'S':
+        y_values = calc.storativity(alpha, porosity, density, thickness)
+    elif y_plotting == 'Ss':
+        y_values = calc.specific_storage(alpha, porosity, density)
+    elif y_plotting == 'Sw':
+        y_values = calc.storativity_water_compressibility(porosity, density, thickness)
+
+    fig = go.Figure([go.Bar(x=materials, y=y_values)])
+    fig.update_layout(xaxis_title='Material', yaxis_title='Storativity')
+
+    text = 'Storativity due to compressibility of aquifer (Sa): ' + str(calc.storativity_aquifer_compressibility(density))
+
+    return fig, text
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0', port=8050)
