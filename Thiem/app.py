@@ -223,7 +223,7 @@ def update_slider_visibility(y_var):
 )
 def update_plot(y_var, Q, T, h1, h2, r1, r2):
 
-    x = np.linspace(r1, r2, 1000)
+    x = np.linspace(r1 + (r2/1000), r2, 1000)
 
     if y_var == 'Q':
         y = calc.Q(T, h1, h2, r1, x)
