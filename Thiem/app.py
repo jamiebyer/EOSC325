@@ -63,10 +63,10 @@ app.layout = html.Div([
         dcc.RadioItems(
             id='y_var',
             options=[
-                {'label': 'well discharge', 'value': 'Q'},
-                {'label': 'aquifer transmissivity', 'value': 'T'},
-                {'label': 'head at inner radius', 'value': 'h1'},
-                {'label': 'head at outer radius', 'value': 'h2'},
+                {'label': 'well discharge (Q)', 'value': 'Q'},
+                {'label': 'aquifer transmissivity (T)', 'value': 'T'},
+                {'label': 'head at inner radius (h1)', 'value': 'h1'},
+                {'label': 'head at outer radius (h2)', 'value': 'h2'},
             ],
             value='Q',
             style={'margin-bottom': '30px'}
@@ -130,6 +130,7 @@ app.layout = html.Div([
                     step=1,
                     value=100,
                 ),
+        ]),
 
         html.Div(
             id='r1_container',
@@ -159,7 +160,6 @@ app.layout = html.Div([
                     step=1,
                     value=1000,
                 ),
-        ]),
         ]),
 
     ], style={'width': '30%', 'display': 'inline-block', 'vertical-align': 'middle'}),
@@ -235,7 +235,7 @@ def update_plot(y_var, Q, T, h1, h2, r1, r2):
         y = calc.h2(Q, T, h1, r1, x)
 
     fig = go.Figure(go.Scatter(x=x, y=y, mode='lines'))
-    fig.update_layout(xaxis_title='r(m)')
+    fig.update_layout(xaxis_title='r(m)', yaxis_title=y_var)
     return fig
 
 if __name__ == '__main__':
