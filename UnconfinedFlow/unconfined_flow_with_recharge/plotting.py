@@ -86,6 +86,7 @@ def initialize_q_plot(h1, h2, K, W, L):
 
     q_plot.update_layout(xaxis_title='x (m)', yaxis_title="qx (m^2/day)")
     q_plot.update_xaxes(range=[0, L])
+    q_plot.update_yaxes(range=[-100, 100])
     q_plot.layout.title = "q Plot"
     q_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))
 
