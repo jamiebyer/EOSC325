@@ -2,6 +2,7 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import numpy as np
 import calculations as calc
+from PIL import Image
 
 
 def remove_mesh_points(X, Y, h1, h2, K, W, L):
@@ -23,15 +24,33 @@ def remove_mesh_points(X, Y, h1, h2, K, W, L):
     return [X, Y]
 
 def get_topography_line(x, h):
-    shift = np.array([5, 5.5, 5.8, 6.0, 5.8, 5.5, 6.3, 6.8, 7.0, 7.4, 7.8, 8.2, 8, 7.5, 6.8, 5, 4])*3
-    x_top = np.linspace(0, 800, 17)
-    y_top = 30 + shift
+    #shift = np.array([5, 5.5, 5.8, 6.0, 5.8, 5.5, 6.3, 6.8, 7.0, 7.4, 7.8, 8.2, 8, 7.5, 6.8, 5, 4])*3
+    shift = np.array([50, 51, 54, 54, 51, 51, 52, 52, 49, 48])
+    x_top = np.arange(0, 900, 100)
+    #x_top = np.linspace(0, 800, 17)
+    y_top = shift
 
     topography_line = go.Scatter(x=x_top, y=y_top, mode='lines', line=dict(color='Sienna'), name="topography")
     return topography_line
 
 def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     elevation_plot = go.Figure()
+
+    elevation_plot.add_layout_image(
+        dict(
+            source=Image.open('./background.png'),
+            xref="paper", yref="paper",
+            x=0, y=-0,#y=-0.005,
+            sizex=1, sizey=1,
+            sizing="stretch",
+            xanchor="left", yanchor="bottom",
+            opacity=0.5,
+            layer = "below"
+        )
+    )
+    elevation_plot.update_xaxes(showgrid=False, zeroline=False)
+    elevation_plot.update_yaxes(showgrid=False, zeroline=False)
+
     # Initializing traces with plot.add_trace
     x = np.linspace(0, L, 1000)  # should go to the max L value
     h = calc.get_h(h1, h2, K, W, L, x)
@@ -39,14 +58,15 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     d = calc.get_d(h1, h2, K, W, L)
 
     # elevation plot
-    elevation_plot.add_trace(go.Scatter(x=x, y=h, line=dict(color='MediumTurquoise'), name="h"))
+    elevation_plot.add_trace(go.Scatter(x=x, y=h, line=dict(color='RoyalBlue'), name="h"))
 
     index = min(range(len(x)), key=lambda i: abs(x[i] - d))
     elevation_plot.add_trace(
-        go.Scatter(x=[d, d], y=[0, h[index]], mode='lines', line=dict(color='FireBrick'), name="d"))
+        go.Scatter(x=[d, d], y=[0, h[index]], mode='lines', line=dict(color='Red'), name="d"))
 
     elevation_plot.update_layout(xaxis_title='x (m)', yaxis_title="Water Table Elevation (m)")
     elevation_plot.update_xaxes(range=[0, L])
+    elevation_plot.update_yaxes(range=[-4, 65])
     elevation_plot.layout.title = "Elevation Plot"
     elevation_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))
 
@@ -60,7 +80,7 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
         X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
         u = calc.get_q(h1, h2, K, W, L, X) * 20
         v = Y * 0
-        quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="qx")
+        quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="qx", line_color="Teal")
         elevation_plot.add_traces(data=quiver_plot.data)
 
     #topography line
