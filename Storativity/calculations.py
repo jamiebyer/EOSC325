@@ -19,13 +19,15 @@ def porosity(inp_porosity):
     #Clay: 0.45, 0.5, 0.55
     #Sand: 0.26, 0.38, 0.5
     #Gravel: 0.25, 0.3, 0.35
+    #Jointed: 0.05, 0.175, 0.30 #using values for fractured basalt
+    #Sound: 0.0001, 0.015, 0.03 #using values for fresh granite and gneiss
     # Guessing values for Jointed and Sound Rocks
     if inp_porosity == 'min':
-        p = np.array([0.45, 0.26, 0.25, 0.5, 0.2])
+        p = np.array([0.45, 0.26, 0.25, 0.05, 0.0001])
     elif inp_porosity == 'mid':
-        p = np.array([0.5, 0.38, 0.3, 0.55, 0.25])
+        p = np.array([0.5, 0.38, 0.3, 0.175, 0.015])
     elif inp_porosity == 'max':
-        p = np.array([0.55, 0.5, 0.35, 0.6, 0.3])
+        p = np.array([0.55, 0.5, 0.35, 0.3, 0.03])
     return p #dimensionless
 
 def density(inp_density):
