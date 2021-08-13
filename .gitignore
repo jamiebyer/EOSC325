@@ -11,6 +11,8 @@ UnconfinedFlow/notebook
 Storativity/.idea
 Storativity/__pycache__
 Storativity/venv
+Storativity/alpha.xlsx
+Storativity/porosity.xlsx
 
 Thiem/.idea
 Thiem/__pycache__
