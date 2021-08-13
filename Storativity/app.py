@@ -15,9 +15,11 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+import dash_table
 
 import plotly.graph_objects as go
 import calculations as calc
+import pandas as pd
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -29,6 +31,8 @@ app = dash.Dash(
     external_stylesheets=external_stylesheets
 )
 
+alpha_df = pd.read_csv('./alpha.csv')
+porosity_df = pd.read_csv('./porosity.csv')
 
 app.layout = html.Div([
 
@@ -42,20 +46,43 @@ app.layout = html.Div([
     html.Div([
         dcc.Graph(
             id='plot',
-            config={
-                'staticPlot': False,  # True, False
-                'scrollZoom': False,  # True, False
-                'doubleClick': 'reset',  # 'reset', 'autosize' or 'reset+autosize', False
-                'showTips': True,  # True, False
-                'displayModeBar': False,  # True, False, 'hover'
-                'watermark': True,
-                'modeBarButtonsToRemove': ['pan2d', 'select2d', 'lasso2d'],
-            },
         ),
 
         dcc.Markdown(
-            id='Sa_text'
+            id='Sa_text',
+            style={'margin-left': '30px'}
         ),
+
+        html.Div([
+            dash_table.DataTable(
+                id='alpha_table',
+                columns=[{"name": i, "id": i} for i in alpha_df.columns],
+                data=alpha_df.to_dict('records'),
+                style_cell={'padding': '5px', 'textAlign': 'left', 'backgroundColor': 'Lavender', 'font-family': 'sans-serif'},
+                style_header={
+                    'backgroundColor': 'CornflowerBlue',
+                    'fontWeight': 'bold',
+                    'textAlign': 'left',
+                    'font-family': 'sans-serif'
+                },
+            ),
+        ], style={'padding': '30px', 'padding-bottom': '0px'} ),
+
+        #styling data tables: https://dash.plotly.com/datatable/style
+        html.Div([
+            dash_table.DataTable(
+                id='porosity_table',
+                columns=[{"name": i, "id": i} for i in porosity_df.columns],
+                data=porosity_df.to_dict('records'),
+                style_cell={'padding': '5px', 'textAlign': 'left', 'backgroundColor': 'Lavender', 'font-family': 'sans-serif'},
+                style_header={
+                    'backgroundColor': 'CornflowerBlue',
+                    'fontWeight': 'bold',
+                    'textAlign': 'left',
+                    'font-family': 'sans-serif'
+                },
+            ),
+        ], style={'padding': '30px'} ),
     ], style={'width': '70%', 'display': 'inline-block', 'vertical-align': 'middle'}),
 
     html.Div([
