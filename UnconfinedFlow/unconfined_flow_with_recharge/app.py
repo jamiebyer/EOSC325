@@ -122,15 +122,6 @@ app.layout = html.Div([
         ),
     dcc.Graph(
             id='q_plot',
-            config={
-                'staticPlot': True,  # True, False
-                #'scrollZoom': True,  # True, False
-                'doubleClick': 'reset',  # 'reset', 'autosize' or 'reset+autosize', False
-                'showTips': True,  # True, False
-                'displayModeBar': False,  # True, False, 'hover'
-                'watermark': True,
-                'modeBarButtonsToRemove': ['pan2d', 'select2d', 'lasso2d'],
-            },
         )
     ], style={'width': '100%', 'display': 'inline-block'}),
 

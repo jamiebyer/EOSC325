@@ -3,6 +3,7 @@ import plotly.figure_factory as ff
 import numpy as np
 import calculations as calc
 from PIL import Image
+from skimage import io
 
 
 def remove_mesh_points(X, Y, h1, h2, K, W, L):
@@ -39,17 +40,18 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     elevation_plot.add_layout_image(
         dict(
             source=Image.open('./background.png'),
-            xref="paper", yref="paper",
-            x=0, y=-0,#y=-0.005,
+            xref="x domain", yref="y domain",
+            x=0, y=0,
             sizex=1, sizey=1,
             sizing="stretch",
             xanchor="left", yanchor="bottom",
             opacity=0.5,
-            layer = "below"
+            layer="below"
         )
     )
     elevation_plot.update_xaxes(showgrid=False, zeroline=False)
     elevation_plot.update_yaxes(showgrid=False, zeroline=False)
+    elevation_plot.add_hrect(xref='paper', yref='paper', x0=1, x1=1.5, y0=-15, y1=100, line_width=0, fillcolor='white', opacity=1)
 
     # Initializing traces with plot.add_trace
     x = np.linspace(0, L, 1000)  # should go to the max L value
@@ -102,11 +104,11 @@ def initialize_q_plot(h1, h2, K, W, L):
     # q plot
     q_plot.add_trace(go.Scatter(x=x, y=q, line=dict(color='MediumPurple'), name="q"))
 
-    q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="0"))
+    #q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="0"))
 
     q_plot.update_layout(xaxis_title='x (m)', yaxis_title="qx (m^2/day)")
     q_plot.update_xaxes(range=[0, L])
-    q_plot.update_yaxes(range=[-100, 100])
+    q_plot.update_yaxes(range=[-100, 100], zeroline=True, zerolinecolor='FireBrick')
     q_plot.layout.title = "q Plot"
     q_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))
 
@@ -128,6 +130,7 @@ def update_elevation_plot(h1, h2, K, W, L, arrow_visibility, elevation_plot):
     elevation_plot.data[1].y = [0, h[index]]
 
     elevation_plot.update_xaxes(range=[0, L])
+    elevation_plot.update_layout_images(sizex=800/L)
 
     if 'visible' in arrow_visibility:
         # quiver plot
