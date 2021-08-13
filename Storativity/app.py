@@ -101,7 +101,7 @@ app.layout = html.Div([
         ),
 
         dcc.Markdown('''
-            **Alpha:**
+            **Alpha (m^2/N):**
         '''),
         dcc.RadioItems(
             id='alpha',
@@ -131,17 +131,16 @@ app.layout = html.Div([
         ),
 
         dcc.Markdown('''
-            **Water Density:**
+            **Water Density (kg/L):**
         '''),
         dcc.RadioItems(
             id='density',
             options=[
-                {'label': 'potable', 'value': 'potable'},
-                {'label': 'sea water', 'value': 'sea_water'},
-                {'label': 'brine', 'value': 'brine'}
+                {'label': 'potable (1.000)', 'value': 'potable'},
+                {'label': 'sea water (1.025)', 'value': 'sea_water'},
+                {'label': 'brine (1.088)', 'value': 'brine'}
             ],
             value='sea_water',
-            labelStyle={'display': 'inline-block'},
             style={'margin-bottom': '30px'}
         ),
 
