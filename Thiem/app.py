@@ -43,15 +43,6 @@ app.layout = html.Div([
     html.Div([
         dcc.Graph(
             id='plot',
-            config={
-                'staticPlot': False,  # True, False
-                'scrollZoom': False,  # True, False
-                'doubleClick': 'reset',  # 'reset', 'autosize' or 'reset+autosize', False
-                'showTips': True,  # True, False
-                'displayModeBar': False,  # True, False, 'hover'
-                'watermark': True,
-                'modeBarButtonsToRemove': ['pan2d', 'select2d', 'lasso2d'],
-            },
         ),
 
     ], style={'width': '70%', 'display': 'inline-block', 'vertical-align': 'middle'}),
@@ -78,11 +69,9 @@ app.layout = html.Div([
                     **Well Discharge (Q) (m3/d):**
                 '''),
                 dcc.Slider(
-                    id='Q',
-                    min=0,
-                    max=500,
-                    step=1,
-                    value=272.83,
+                    id='Q', min=0, max=500, step=1, value=272.83,
+                    marks={0:'0', 500:'500'},
+                    tooltip={'always_visible':True, 'placement':'topLeft'}
                 ),
         ]),
 
@@ -93,11 +82,9 @@ app.layout = html.Div([
                         **Aquifer Transmissivity (T) (m2/d):**
                     '''),
                 dcc.Slider(
-                    id='T',
-                    min=0,
-                    max=50,
-                    step=1,
-                    value=8,
+                    id='T', min=0, max=50, step=1, value=8,
+                    marks={0:'0', 50:'50'},
+                    tooltip={'always_visible':True, 'placement':'topLeft'}
                 ),
         ]),
 
@@ -109,11 +96,9 @@ app.layout = html.Div([
                             **Head at Inner Radius (h1) (m):**
                         '''),
                 dcc.Slider(
-                    id='h1',
-                    min=0,
-                    max=100,
-                    step=1,
-                    value=50,
+                    id='h1', min=0, max=100, step=1, value=50,
+                    marks={0:'0', 100:'100'},
+                    tooltip={'always_visible':True, 'placement':'topLeft'}
                 ),
         ]),
 
@@ -124,11 +109,9 @@ app.layout = html.Div([
                             **Head at Outer Radius (h2) (m):**
                         '''),
                 dcc.Slider(
-                    id='h2',
-                    min=0,
-                    max=100,
-                    step=1,
-                    value=100,
+                    id='h2', min=0, max=100, step=1, value=100,
+                    marks={0:'0', 100:'100'},
+                    tooltip={'always_visible':True, 'placement':'topLeft'}
                 ),
         ]),
 
@@ -139,11 +122,9 @@ app.layout = html.Div([
                             **Inner Radius (r1) (m):**
                         '''),
                 dcc.Slider(
-                    id='r1',
-                    min=0,
-                    max=2,
-                    step=0.01,
-                    value=0.1
+                    id='r1', min=0, max=2, step=0.01, value=0.1,
+                    marks={0:'0', 2:'2'},
+                    tooltip={'always_visible':True, 'placement':'topLeft'}
                 ),
         ]),
 
@@ -154,11 +135,9 @@ app.layout = html.Div([
                             **Outer Radius (r2) (m):**
                         '''),
                 dcc.Slider(
-                    id='r2',
-                    min=10,
-                    max=1000,
-                    step=1,
-                    value=1000,
+                    id='r2', min=10, max=1000, step=1, value=1000,
+                    marks={10:'10', 1000:'1000'},
+                    tooltip={'always_visible':True, 'placement':'topLeft'}
                 ),
         ]),
 
@@ -236,6 +215,7 @@ def update_plot(y_var, Q, T, h1, h2, r1, r2):
 
     fig = go.Figure(go.Scatter(x=x, y=y, mode='lines'))
     fig.update_layout(xaxis_title='r(m)', yaxis_title=y_var)
+    fig.update_xaxes(ticks="outside")
     return fig
 
 if __name__ == '__main__':
