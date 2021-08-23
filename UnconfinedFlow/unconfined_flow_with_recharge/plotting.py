@@ -60,11 +60,11 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     d = calc.get_d(h1, h2, K, W, L)
 
     # elevation plot
-    elevation_plot.add_trace(go.Scatter(x=x, y=h, line=dict(color='RoyalBlue'), name="h"))
+    elevation_plot.add_trace(go.Scatter(x=x, y=h, line=dict(color='RoyalBlue'), name="h(x)"))
 
     index = min(range(len(x)), key=lambda i: abs(x[i] - d))
     elevation_plot.add_trace(
-        go.Scatter(x=[d, d], y=[0, h[index]], mode='lines', line=dict(color='Red'), name="d"))
+        go.Scatter(x=[d, d], y=[0, h[index]], mode='lines', line=dict(color='Red'), name="divide"))
 
     elevation_plot.update_layout(xaxis_title='x (m)', yaxis_title="Water Table Elevation (m)")
     elevation_plot.update_xaxes(range=[0, L])
@@ -82,7 +82,8 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
         X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
         u = calc.get_q(h1, h2, K, W, L, X) * 20
         v = Y * 0
-        quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="qx", line_color="Teal")
+        # see https://plotly.github.io/plotly.py-docs/generated/plotly.figure_factory.create_quiver.html 
+        quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="q(x)", line_color="Teal")
         elevation_plot.add_traces(data=quiver_plot.data)
 
     #topography line
@@ -102,9 +103,9 @@ def initialize_q_plot(h1, h2, K, W, L):
     d = calc.get_d(h1, h2, K, W, L)
 
     # q plot
-    q_plot.add_trace(go.Scatter(x=x, y=q, line=dict(color='MediumPurple'), name="q"))
+    q_plot.add_trace(go.Scatter(x=x, y=q, line=dict(color='MediumPurple'), name="q(x) m^2/day"))
 
-    #q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="0"))
+    q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="zero"))
 
     q_plot.update_layout(xaxis_title='x (m)', yaxis_title="qx (m^2/day)")
     q_plot.update_xaxes(range=[0, L])
