@@ -3,7 +3,6 @@ import plotly.figure_factory as ff
 import numpy as np
 import calculations as calc
 from PIL import Image
-from skimage import io
 
 
 def remove_mesh_points(X, Y, h1, h2, K, W, L):
