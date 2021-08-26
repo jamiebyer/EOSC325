@@ -6,7 +6,7 @@
 # mouse-over or 'hover' behavior is based on https://dash.plotly.com/interactive-graphing
 # plotly express line parameters via https://plotly.com/python-api-reference/generated/plotly.express.line.html#plotly.express.line
 # Mapmaking code initially learned from https://plotly.com/python/mapbox-layers/.
-
+import base64
 
 from flask import Flask
 from os import environ
@@ -37,20 +37,30 @@ initial_L = 800
 initial_material = 'silty_sand'
 initial_arrow_visibility = ['visible']
 
+#load markdown
+introduction = open('introduction.md', 'r')
+introduction_markdown = introduction.read()
+
+image_filename = 'diagram.png'
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
+
 app.layout = html.Div([
     html.Div([
-        dcc.Markdown('''
-            ### EOSC 325: Unconfined Flow with Recharge
-            
-            Explore **unconfined** flow between two points (or water bodies) each with known hydraulic head for differente aquifer materials. 
-            See "Sources" below for the origin and inspiration of this app. (Ver: Aug 19, 2021)
+        dcc.Markdown(
+            children=introduction_markdown
+        ),
+    ], style={'width': '100%', 'display': 'inline-block', 'padding': '0 20', 'vertical-align': 'middle', 'margin-bottom': 30, 'margin-right': 50, 'margin-left': 20}),
 
-            * Set "measured" hydraulic head at left and right sides of the 2D section with sliders h1 and h2 respectively.
-            * Set hydraulic conductivity to a value within bounds determined by choice of material. 
-            * Set recharge up to 10cm per day. Negative 'recharge' represents evaporation/transpiration. 
+    html.Div([
+        html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), style={'width': '600px'})
+    ], style={'width': '100%', 'margin-left': '200px', 'margin-bottom': '50px'}),
 
-            ----------
-            '''),
+    html.Div([
+        dcc.Markdown(
+            '''
+            ------
+            '''
+        ),
     ], style={'width': '100%', 'display': 'inline-block', 'padding': '0 20', 'vertical-align': 'middle', 'margin-bottom': 30, 'margin-right': 50, 'margin-left': 20}),
 
     html.Div([

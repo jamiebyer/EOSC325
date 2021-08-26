@@ -69,7 +69,6 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     elevation_plot.update_xaxes(range=[0, L])
     elevation_plot.update_yaxes(range=[-4, 65])
     elevation_plot.layout.title = "Elevation Plot"
-    elevation_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))
 
     # elevation_plot.update_layout(annotations=get_arrows(h1, L, q, x))
 
@@ -79,7 +78,7 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
         y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
         X, Y = np.meshgrid(x_quiver, y_quiver)
         X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
-        u = calc.get_q(h1, h2, K, W, L, X) * 20
+        u = calc.get_q(h1, h2, K, W, L, X) * 15
         v = Y * 0
         # see https://plotly.github.io/plotly.py-docs/generated/plotly.figure_factory.create_quiver.html 
         quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16), name="q(x)", line_color="Teal")
@@ -89,6 +88,12 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     elevation_plot.add_trace(get_topography_line(x, h))
 
     elevation_plot.add_hrect(y0=-4, y1=0, line_width=0, fillcolor="grey", opacity=1)
+
+    elevation_plot.update_layout(
+        #autosize=False,
+        #width=800,
+        margin=dict(l=100, r=150, b=50, t=50)
+    )
 
     return elevation_plot
 
@@ -102,7 +107,7 @@ def initialize_q_plot(h1, h2, K, W, L):
     d = calc.get_d(h1, h2, K, W, L)
 
     # q plot
-    q_plot.add_trace(go.Scatter(x=x, y=q, line=dict(color='MediumPurple'), name="q(x) m^2/day"))
+    q_plot.add_trace(go.Scatter(x=x, y=q, line=dict(color='MediumPurple'), name="q(x)"))
 
     q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="zero"))
 
@@ -110,7 +115,12 @@ def initialize_q_plot(h1, h2, K, W, L):
     q_plot.update_xaxes(range=[0, L])
     q_plot.update_yaxes(range=[-100, 100], zeroline=True, zerolinecolor='FireBrick')
     q_plot.layout.title = "q Plot"
-    q_plot.update_layout(margin=dict(l=20, r=20, t=40, b=20))
+
+    q_plot.update_layout(
+        #autosize=False,
+        #width=800,
+        margin=dict(l=100, r=150, b=50, t=50)
+    )
 
     return q_plot
 
@@ -138,7 +148,7 @@ def update_elevation_plot(h1, h2, K, W, L, arrow_visibility, elevation_plot):
         y_quiver = np.linspace(0, (5 / 6) * max(h), 5)  # go to max y value
         X, Y = np.meshgrid(x_quiver, y_quiver)
         X, Y = remove_mesh_points(X, Y, h1, h2, K, W, L)
-        u = calc.get_q(h1, h2, K, W, L, X) * 20
+        u = calc.get_q(h1, h2, K, W, L, X) * 15
         v = Y * 0
         quiver_plot = ff.create_quiver(X, Y, u, v, arrow_scale=0.3, angle=np.pi / (9 * 16))
 
