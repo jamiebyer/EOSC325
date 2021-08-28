@@ -9,9 +9,6 @@ def get_d(h1, h2, K, W, L):
 
 def get_h(h1, h2, K, W, L, x):
     a = (h1**2)-(((h1**2-h2**2)*x)/L)+((W/K)*(L-x)*x) + 0j
-    #inds = np.where(np.isnan(a))
-    #a[inds] = None
-    #print(inds)
     h = np.real(np.sqrt(a))
     return h
 

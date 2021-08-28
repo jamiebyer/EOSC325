@@ -31,7 +31,7 @@ app = dash.Dash(
 #initial parameter values
 initial_h1 = 35
 initial_h2 = 30
-initial_K = 50
+initial_K = 1
 initial_W = 0.05
 initial_L = 800
 initial_material = 'silty_sand'
@@ -69,20 +69,20 @@ app.layout = html.Div([
         dcc.Markdown(''' Left side head: **_h1_ (m).** '''),
         dcc.Slider(
             id='h1', min=1, max=50, step=0.5, value=initial_h1,
-            marks={1:'1', 50:'50'},
-            tooltip={'always_visible':True, 'placement':'topLeft'}
+            marks={1:'1', 10:'10', 20:'20', 30:'30', 40:'40', 50:'50'},
+            #tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
-        dcc.Markdown(''' Hydraulic conductivity: **_K_ (m/day).** '''),
+        dcc.Markdown(''' Hydraulic conductivity: **_K_ (m/day).** ''', style={'margin-top': '20px'}),
         dcc.Slider(
-            id='K', min=10**(-2), max=10**(2), step=0.01, value=initial_K,
-            marks={10**(-2):'10\u207B\u00B2', 10**(2):'10\u00B2'},
-            tooltip={'always_visible': True, 'placement': 'topLeft'}
+            id='K', min=-2, max=2, step=0.01, value=initial_K,
+            marks={-2:'10\u207B\u00B2', -1:'10\u207B\u00B9', 0:'1', 1:'10', 2:'10\u00B2'},
+            #tooltip={'always_visible': True, 'placement': 'topLeft'}
         ),
-        dcc.Markdown(''' Profile length: **_L_ (m).** '''),
+        dcc.Markdown(''' Profile length: **_L_ (m).** ''', style={'margin-top': '20px'}),
         dcc.Slider(
             id='L', min=100, max=800, step=5, value=initial_L,
-            marks={100:'100', 800:'800'},
-            tooltip={'always_visible':True, 'placement':'topLeft'}
+            marks={100:'100', 200:'200', 300:'300', 400:'400', 500:'500', 600:'600', 700:'700', 800:'800'},
+            #tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
     ], style={'width': '37%', 'display': 'inline-block', 'vertical-align': 'top'}),
 
@@ -90,14 +90,14 @@ app.layout = html.Div([
         dcc.Markdown(''' Right side head: **_h2_ (m).** '''),
         dcc.Slider(
             id='h2', min=1, max=50, step=0.5, value=initial_h2,
-            marks={1:'1', 50:'50'},
-            tooltip={'always_visible':True, 'placement':'topLeft'}
+            marks={1:'1', 10:'10', 20:'20', 30:'30', 40:'40', 50:'50'},
+            #tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
-        dcc.Markdown(''' Recharge: **_W_ (m/day).** '''),
+        dcc.Markdown(''' Recharge: **_W_ (m/day).** ''', style={'margin-top': '20px'}),
         dcc.Slider(
             id='W', min=-0.05, max=0.1, step=0.01, value=initial_W,
             marks={-0.05:'-0.05', 0:'0.0', 0.05:'0.05', 0.1:'0.1'},
-            tooltip={'always_visible':True, 'placement':'topLeft'}
+            #tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
     ], style={'width': '37%', 'display': 'inline-block', 'vertical-align': 'top'}),
 
@@ -154,8 +154,8 @@ app.layout = html.Div([
 
 
 #initialize plots
-elevation_plot = plot.initialize_elevation_plot(initial_h1, initial_h2, initial_K, initial_W, initial_L, initial_arrow_visibility)
-q_plot = plot.initialize_q_plot(initial_h1, initial_h2, initial_K, initial_W, initial_L)
+elevation_plot = plot.initialize_elevation_plot(initial_h1, initial_h2, (10**initial_K), initial_W, initial_L, initial_arrow_visibility)
+q_plot = plot.initialize_q_plot(initial_h1, initial_h2, (10**initial_K), initial_W, initial_L)
 
 @app.callback(
     Output(component_id='K', component_property='min'),
@@ -165,13 +165,13 @@ q_plot = plot.initialize_q_plot(initial_h1, initial_h2, initial_K, initial_W, in
 )
 def update_K_bounds(material):
     if material == 'silt':
-        return 10**(-4), 1, {10**(-4):'10\u207B\u2074', 1:'1'}
+        return -4, 0, {-4:'10\u207B\u2074', -3:'10\u207B\u00B3', -2:'10\u207B\u00B2', -1:'10\u207B\u00B9', 0:'1'}
     elif material == 'silty_sand':
-        return 10**(-2), 10**(2), {10**(-2):'10\u207B\u00B2', 10**(2):'10\u00B2'}
+        return -2, 2, {-2:'10\u207B\u00B2', -1:'10\u207B\u00B9', 0:'1', 1:'10', 2:'10\u00B2'},
     elif material == 'clean_sand':
-        return 10**(-1), 10**(3), {10**(-1):'10\u207B\u00B9', 10**(3):'10\u00B3'}
+        return -1, 3, {-1:'10\u207B\u00B9', 0:'1', 1:'10', 2:'10\u00B2', 3:'10\u00B3'}
     elif material == 'gravel':
-        return 10**(2), 10**(5), {10**(2):'10\u00B2', 10**(5):'10\u2075'}
+        return 2, 5, {2:'10\u00B2', 3:'10\u00B3', 4:'10\u2074', 5:'10\u2075'}
 
 @app.callback(
     Output(component_id='elevation_plot', component_property='figure'),
@@ -183,7 +183,7 @@ def update_K_bounds(material):
     Input(component_id='arrow_visibility', component_property='value')
 )
 def update_elevation_plot(h1, h2, K, W, L, arrow_visibility):
-    fig = plot.update_elevation_plot(h1, h2, K, W, L, arrow_visibility, elevation_plot)
+    fig = plot.update_elevation_plot(h1, h2, (10**(K)), W, L, arrow_visibility, elevation_plot)
     return fig
 
 
@@ -196,7 +196,7 @@ def update_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     Input(component_id='L', component_property='value')
 )
 def update_q_plot(h1, h2, K, W, L):
-    fig = plot.update_q_plot(h1, h2, K, W, L, q_plot)
+    fig = plot.update_q_plot(h1, h2, (10**(K)), W, L, q_plot)
     return fig
 
 
