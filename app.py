@@ -76,7 +76,7 @@ app.layout = html.Div([
         dcc.Slider(
             id='K', min=10**(-2), max=10**(2), step=0.01, value=initial_K,
             marks={10**(-2):'10\u207B\u00B2', 10**(2):'10\u00B2'},
-            tooltip={'always_visible':True, 'placement':'topLeft'}
+            tooltip={'always_visible': True, 'placement': 'topLeft'}
         ),
         dcc.Markdown(''' Profile length: **_L_ (m).** '''),
         dcc.Slider(
@@ -106,10 +106,10 @@ app.layout = html.Div([
         dcc.RadioItems(
             id='material',
             options=[
-                {'label': 'Silt, Loess (10^-4 < K < 1)', 'value': 'silt'},
-                {'label': 'Silty Sand (10^-2 < K < 10^2)', 'value': 'silty_sand'},
-                {'label': 'Clean Sand (10^-1 < K < 10^3)', 'value': 'clean_sand'},
-                {'label': 'Gravel (10^2 < K < 10^5)', 'value': 'gravel'},
+                {'label': 'Silt, Loess (10\u207B\u2074 < K < 1)', 'value': 'silt'},
+                {'label': 'Silty Sand (10\u207B\u00B2 < K < 10\u00B2)', 'value': 'silty_sand'},
+                {'label': 'Clean Sand (10\u207B\u00B9 < K < 10\u00B3)', 'value': 'clean_sand'},
+                {'label': 'Gravel (10\u00B2 < K < 10\u2075)', 'value': 'gravel'},
             ],
             value=initial_material,
             style={'margin-bottom': '20px'}
