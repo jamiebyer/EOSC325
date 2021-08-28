@@ -40,6 +40,8 @@ initial_arrow_visibility = ['visible']
 #load markdown
 introduction = open('introduction.md', 'r')
 introduction_markdown = introduction.read()
+sources = open('sources.md', 'r')
+sources_markdown = sources.read()
 
 image_filename = 'diagram.png'
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
@@ -118,8 +120,10 @@ app.layout = html.Div([
             options=[
                 {'label': 'arrows visible', 'value': 'visible'},
             ],
-            value=initial_arrow_visibility
-        )
+            value=initial_arrow_visibility,
+            style={'margin-bottom': '50px'}
+        ),
+        html.Button('Reset', id='reset_button')
     ], style={'width': '26%', 'display': 'inline-block', 'vertical-align': 'top'}),
 
     html.Div([
@@ -141,13 +145,9 @@ app.layout = html.Div([
     ], style={'width': '100%', 'display': 'inline-block'}),
 
     html.Div([
-            dcc.Markdown('''
-                #### Sources
-                
-                1. Inspired by [Hydrogeologic Properties of Earth Materials and Principles of Groundwater Flow](https://gw-project.org/books/hydrogeologic-properties-of-earth-materials-and-principles-of-groundwater-flow/), William W. Woessner (University of Montana, USA) and Eileen P. Poeter (Colorado School of Mines, USA), ISBN: 978-1-7770541-2-0.
-
-                ----------
-                '''),
+            dcc.Markdown(
+                children=sources_markdown
+            ),
         ], style={'width': '100%', 'display': 'inline-block', 'padding': '0 20', 'vertical-align': 'middle', 'margin-bottom': 30, 'margin-right': 50, 'margin-left': 20}),
 
 ], style={'width': '1000px'})
@@ -198,6 +198,22 @@ def update_elevation_plot(h1, h2, K, W, L, arrow_visibility):
 def update_q_plot(h1, h2, K, W, L):
     fig = plot.update_q_plot(h1, h2, K, W, L, q_plot)
     return fig
+
+
+
+@app.callback(
+    Output(component_id='h1', component_property='value'),
+    Output(component_id='h2', component_property='value'),
+    Output(component_id='K', component_property='value'),
+    Output(component_id='W', component_property='value'),
+    Output(component_id='L', component_property='value'),
+    Output(component_id='arrow_visibility', component_property='value'),
+    Output(component_id='material', component_property='value'),
+    Input(component_id='reset_button', component_property='n_clicks'),
+)
+def reset_page(n_clicks):
+    return initial_h1, initial_h2, initial_K, initial_W, initial_L, initial_arrow_visibility, initial_material
+
 
 
 if __name__ == '__main__':
