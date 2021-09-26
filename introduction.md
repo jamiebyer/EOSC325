@@ -1,5 +1,3 @@
-### EOSC 325: Unconfined Flow with Recharge
-            
 Explore **unconfined** flow between two points (or water bodies) each with known hydraulic head for differente aquifer materials. 
 See "Sources" below for the origin and inspiration of this app. (Ver: Aug 19, 2021)
 
@@ -8,5 +6,3 @@ See "Sources" below for the origin and inspiration of this app. (Ver: Aug 19, 20
 * Set recharge up to 10cm per day. Negative 'recharge' represents evaporation/transpiration. 
 
 Note: Flow arrows not to scale.
-
-----------

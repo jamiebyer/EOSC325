@@ -49,13 +49,22 @@ encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 app.layout = html.Div([
     html.Div([
         dcc.Markdown(
-            children=introduction_markdown
+            '''
+            ### EOSC 325: Unconfined Flow with Recharge
+            '''
         ),
-    ], style={'width': '100%', 'display': 'inline-block', 'padding': '0 20', 'vertical-align': 'middle', 'margin-bottom': 30, 'margin-right': 50, 'margin-left': 20}),
+    ], style={'width': '100%', 'margin-left': '200px', 'margin-bottom': '20px'}),
 
     html.Div([
-        html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), style={'width': '600px'})
-    ], style={'width': '100%', 'margin-left': '200px', 'margin-bottom': '50px'}),
+        html.Div([
+            dcc.Markdown(
+                children=introduction_markdown
+            ),
+        ], style={'width': '60%', 'display': 'inline-block', 'vertical-align': 'middle', 'margin-left': '20px'}),
+        html.Div([
+            html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), style={'width': '400px'})
+        ], style={'width': '30%', 'display': 'inline-block', 'vertical-align': 'middle'}),
+    ], style={'width': '100%'}),
 
     html.Div([
         dcc.Markdown(
@@ -66,19 +75,19 @@ app.layout = html.Div([
     ], style={'width': '100%', 'display': 'inline-block', 'padding': '0 20', 'vertical-align': 'middle', 'margin-bottom': 30, 'margin-right': 50, 'margin-left': 20}),
 
     html.Div([
-        dcc.Markdown(''' Left side head: **_h1_ (m).** '''),
+        dcc.Markdown(id='h1_label', children=''' Left side head: **_h1_ = ''' + str(initial_h1) + '''m**'''),
         dcc.Slider(
             id='h1', min=1, max=50, step=0.5, value=initial_h1,
             marks={1:'1', 10:'10', 20:'20', 30:'30', 40:'40', 50:'50'},
             #tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
-        dcc.Markdown(''' Hydraulic conductivity: **_K_ (m/day).** ''', style={'margin-top': '20px'}),
+        dcc.Markdown(id='K_label', children=''' Hydraulic conductivity: **_K_ = ''' + str(initial_K) + '''m/day**''', style={'margin-top': '20px'}),
         dcc.Slider(
             id='K', min=-2, max=2, step=0.01, value=initial_K,
             marks={-2:'10\u207B\u00B2', -1:'10\u207B\u00B9', 0:'1', 1:'10', 2:'10\u00B2'},
             #tooltip={'always_visible': True, 'placement': 'topLeft'}
         ),
-        dcc.Markdown(''' Profile length: **_L_ (m).** ''', style={'margin-top': '20px'}),
+        dcc.Markdown(id='L_label', children=''' Profile length: **_L_ = ''' + str(initial_L) + '''m**''', style={'margin-top': '20px'}),
         dcc.Slider(
             id='L', min=100, max=800, step=5, value=initial_L,
             marks={100:'100', 200:'200', 300:'300', 400:'400', 500:'500', 600:'600', 700:'700', 800:'800'},
@@ -87,13 +96,13 @@ app.layout = html.Div([
     ], style={'width': '37%', 'display': 'inline-block', 'vertical-align': 'top'}),
 
     html.Div([
-        dcc.Markdown(''' Right side head: **_h2_ (m).** '''),
+        dcc.Markdown(id='h2_label', children=''' Right side head: **_h2_ = ''' + str(initial_h2) + '''m**'''),
         dcc.Slider(
             id='h2', min=1, max=50, step=0.5, value=initial_h2,
             marks={1:'1', 10:'10', 20:'20', 30:'30', 40:'40', 50:'50'},
             #tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
-        dcc.Markdown(''' Recharge: **_W_ (m/day).** ''', style={'margin-top': '20px'}),
+        dcc.Markdown(id='W_label', children=''' Recharge: **_W_ = ''' + str(initial_W) + '''m/day**''', style={'margin-top': '20px'}),
         dcc.Slider(
             id='W', min=-0.05, max=0.1, step=0.01, value=initial_W,
             marks={-0.05:'-0.05', 0:'0.0', 0.05:'0.05', 0.1:'0.1'},
@@ -156,6 +165,43 @@ app.layout = html.Div([
 #initialize plots
 elevation_plot = plot.initialize_elevation_plot(initial_h1, initial_h2, (10**initial_K), initial_W, initial_L, initial_arrow_visibility)
 q_plot = plot.initialize_q_plot(initial_h1, initial_h2, (10**initial_K), initial_W, initial_L)
+
+#updating slider labels
+@app.callback(
+    Output(component_id='h1_label', component_property='children'),
+    Input(component_id='h1', component_property='value'),
+)
+def update_h1_label(h1):
+    return ''' Left side head: **_h1_ = ''' + str(h1) + '''m**'''
+
+@app.callback(
+    Output(component_id='h2_label', component_property='children'),
+    Input(component_id='h2', component_property='value'),
+)
+def update_h2_label(h2):
+    return ''' Right side head: **_h2_ = ''' + str(h2) + '''m**'''
+
+@app.callback(
+    Output(component_id='K_label', component_property='children'),
+    Input(component_id='K', component_property='value'),
+)
+def update_h1_label(K):
+    return ''' Hydraulic conductivity: **_K_ = ''' + str(K) + '''m/day**'''
+
+@app.callback(
+    Output(component_id='W_label', component_property='children'),
+    Input(component_id='W', component_property='value'),
+)
+def update_h1_label(W):
+    return ''' Recharge: **_W_ = ''' + str(W) + '''m/day**'''
+
+@app.callback(
+    Output(component_id='L_label', component_property='children'),
+    Input(component_id='L', component_property='value'),
+)
+def update_h1_label(L):
+    return ''' Profile length: **_L_ = ''' + str(L) + '''m**'''
+
 
 @app.callback(
     Output(component_id='K', component_property='min'),

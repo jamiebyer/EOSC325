@@ -111,7 +111,7 @@ def initialize_q_plot(h1, h2, K, W, L):
 
     q_plot.add_trace(go.Scatter(x=[x[0], x[-1]], y=[0, 0], mode='lines', line=dict(color='FireBrick'), name="zero"))
 
-    q_plot.update_layout(xaxis_title='x (m)', yaxis_title="qx (m^2/day)")
+    q_plot.update_layout(xaxis_title='x (m)', yaxis_title="qx (m\u00B2/day)")
     q_plot.update_xaxes(range=[0, L])
     q_plot.update_yaxes(range=[-100, 100], zeroline=True, zerolinecolor='FireBrick')
     q_plot.layout.title = "q Plot"
