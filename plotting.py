@@ -33,6 +33,7 @@ def get_topography_line(x, h):
     topography_line = go.Scatter(x=x_top, y=y_top, mode='lines', line=dict(color='Sienna'), name="topography")
     return topography_line
 
+
 def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
     elevation_plot = go.Figure()
 
@@ -94,6 +95,11 @@ def initialize_elevation_plot(h1, h2, K, W, L, arrow_visibility):
         #width=800,
         margin=dict(l=100, r=150, b=50, t=50)
     )
+
+    text = "<b>h1 = " + str(h1) + "m<br>h2 = " + str(h2) + "m<br>K = " + str(K) + "m\day<br>W = " + str(
+        W) + "m\day<br>L = " + str(L) + "m</b>"
+    elevation_plot.add_annotation(xref='paper', yref='paper', x=1, y=0, text=text,
+                                  showarrow=False, xshift=-10, yshift=10, align='left', bgcolor='lightgrey')
 
     return elevation_plot
 
@@ -163,6 +169,10 @@ def update_elevation_plot(h1, h2, K, W, L, arrow_visibility, elevation_plot):
     topography_plot = get_topography_line(x, h)
     elevation_plot.data[3].x = topography_plot.x
     elevation_plot.data[3].y = topography_plot.y
+
+    text = "<b>h1 = " + str(h1) + "m<br>h2 = " + str(h2) + "m<br>K = " + str(K) + "m\day<br>W = " + str(
+        W) + "m\day<br>L = " + str(L) + "m</b>"
+    elevation_plot.update_annotations(text=text)
 
     return elevation_plot
 

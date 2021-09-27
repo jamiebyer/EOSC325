@@ -38,6 +38,8 @@ initial_material = 'silty_sand'
 initial_arrow_visibility = ['visible']
 
 #load markdown
+header = open('header.md', 'r')
+header_markdown = header.read()
 introduction = open('introduction.md', 'r')
 introduction_markdown = introduction.read()
 sources = open('sources.md', 'r')
@@ -49,9 +51,7 @@ encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 app.layout = html.Div([
     html.Div([
         dcc.Markdown(
-            '''
-            ### EOSC 325: Unconfined Flow with Recharge
-            '''
+            children=header_markdown
         ),
     ], style={'width': '100%', 'margin-left': '200px', 'margin-bottom': '20px'}),
 
