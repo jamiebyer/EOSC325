@@ -1,1 +1,1 @@
-### EOSC 325: Unconfined Flow with Recharge
+### Unconfined 'Linear' Flow with Recharge
