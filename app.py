@@ -81,7 +81,7 @@ app.layout = html.Div([
             marks={1:'1', 10:'10', 20:'20', 30:'30', 40:'40', 50:'50'},
             #tooltip={'always_visible':True, 'placement':'topLeft'}
         ),
-        dcc.Markdown(id='K_label', children=''' Hydraulic conductivity: **_K_ = ''' + str(initial_K) + '''m/day**''', style={'margin-top': '20px'}),
+        dcc.Markdown(id='K_label', children=''' Hydraulic conductivity: **_K_ = ''' + str(10**initial_K) + '''m/day**''', style={'margin-top': '20px'}),
         dcc.Slider(
             id='K', min=-2, max=2, step=0.01, value=initial_K,
             marks={-2:'10\u207B\u00B2', -1:'10\u207B\u00B9', 0:'1', 1:'10', 2:'10\u00B2'},
@@ -186,7 +186,7 @@ def update_h2_label(h2):
     Input(component_id='K', component_property='value'),
 )
 def update_h1_label(K):
-    return ''' Hydraulic conductivity: **_K_ = ''' + str(K) + '''m/day**'''
+    return ''' Hydraulic conductivity: **_K_ = ''' + str(10**K)[:4] + '''m/day**'''
 
 @app.callback(
     Output(component_id='W_label', component_property='children'),
